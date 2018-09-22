@@ -1,0 +1,22 @@
+{
+  "name": "react-imperator",
+  "version": "1.0.0",
+  "description": "State handler for React",
+  "main": "dist/ReactImperator.js",
+  "types": ["dist/ReactImperator.d.ts", "dist/ReactImperator.d.ts", "dist/ReactImperator.js"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnstrand/react-imperator"
+  },
+  "scripts": {
+    "build": "node ./node_modules/typescript/bin/tsc"
+  },
+  "keywords": [],
+  "author": "John Strand",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^16.4.14",
+    "react": "^16.5.0",
+    "typescript": "^3.0.3"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outFile": "./dist/ReactImperator.js",
+    "rootDir": "src",
+    "noImplicitAny": true,
+    "module": "amd",
+    "target": "es5",
+    "jsx": "react",
+    "moduleResolution": "node",
+    "declaration": true,
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src/setupTests.ts",
+    "example",
+    "lib",
+    "dist"
+  ]
+}
