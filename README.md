@@ -1,3 +1,3 @@
 # react-imperator
 
-Documentation to come
+IT'S BROKEN! DO NOT BOTHER RIGHT NOW!
