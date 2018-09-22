@@ -1,124 +1,14 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    }
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-define("Types", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-});
-define("Utils", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.generateName = function () {
-        return Math.random()
-            .toString(36)
-            .substring(7);
-    };
-    exports.distinct = function (arr) {
-        var container = arr.reduce(function (acc, cur) {
-            acc[cur] = true;
-            return acc;
-        }, {});
-        return Object.keys(container);
-    };
-});
-define("ReactImperator", ["require", "exports", "react", "Utils"], function (require, exports, React, Utils_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var _a;
-    exports.update = (_a = (function () {
-        var callbacks = {};
-        var contextState = {};
-        var registerCallback = function (context, consumer, callback) {
-            if (!callbacks[context]) {
-                callbacks[context] = {};
-            }
-            callbacks[context][consumer] = callback;
-        };
-        var unregister = function (consumer) {
-            Object.keys(callbacks).forEach(function (context) { return delete callbacks[context][consumer]; });
-        };
-        var updateContext = function (context, state) {
-            Object.keys(callbacks[context]).forEach(function (subscriber) {
-                var callback = callbacks[context][subscriber];
-                if (!callback) {
-                    return;
-                }
-                callback(state);
-            });
-        };
-        return {
-            update: function (context, producer) {
-                if (!callbacks[context]) {
-                    return;
-                }
-                var state = producer(contextState[context]);
-                contextState[context] = state;
-                updateContext(context, state);
-            },
-            connect: function (Component, contexts) {
-                return /** @class */ (function (_super) {
-                    __extends(class_1, _super);
-                    function class_1(props) {
-                        var _this = _super.call(this, props) || this;
-                        _this.name = Utils_1.generateName();
-                        var propContexts = Object.keys(props);
-                        Utils_1.distinct(propContexts.concat(contexts || [])).forEach(function (context) {
-                            registerCallback(context, _this.name, function (value) {
-                                var _a;
-                                if (!context) {
-                                    return;
-                                }
-                                var newState = (_a = {}, _a[context] = value, _a);
-                                _this.setState(function (state) { return (__assign({}, state, newState)); });
-                            });
-                            if (propContexts.indexOf(context) > -1) {
-                                var value = props[context];
-                                contextState[context] = value;
-                            }
-                        });
-                        return _this;
-                    }
-                    class_1.prototype.render = function () {
-                        return React.createElement(Component, __assign({}, this.state));
-                    };
-                    class_1.prototype.componentWillMount = function () {
-                        var propContexts = Object.keys(this.props);
-                        var extraContext = contexts || [];
-                        Utils_1.distinct(propContexts.concat(extraContext)).forEach(function (context) {
-                            exports.update(context, function (value) { return value; });
-                        });
-                    };
-                    class_1.prototype.componentWillReceiveProps = function (props) {
-                        this.setState(props);
-                    };
-                    class_1.prototype.componentWillUnmount = function () {
-                        unregister(this.name);
-                    };
-                    return class_1;
-                }(React.Component));
-            }
-        };
-    })(), _a.update), exports.connect = _a.connect;
-});
-//# sourceMappingURL=ReactImperator.js.map
+(function(e){var t={};function r(n){if(t[n]){return t[n].exports}var o=t[n]={i:n,l:false,exports:{}};e[n].call(o.exports,o,o.exports,r);o.l=true;return o.exports}r.m=e;r.c=t;r.d=function(e,t,n){if(!r.o(e,t)){Object.defineProperty(e,t,{enumerable:true,get:n})}};r.r=function(e){if(typeof Symbol!=="undefined"&&Symbol.toStringTag){Object.defineProperty(e,Symbol.toStringTag,{value:"Module"})}Object.defineProperty(e,"__esModule",{value:true})};r.t=function(e,t){if(t&1)e=r(e);if(t&8)return e;if(t&4&&typeof e==="object"&&e&&e.__esModule)return e;var n=Object.create(null);r.r(n);Object.defineProperty(n,"default",{enumerable:true,value:e});if(t&2&&typeof e!="string")for(var o in e)r.d(n,o,function(t){return e[t]}.bind(null,o));return n};r.n=function(e){var t=e&&e.__esModule?function t(){return e["default"]}:function t(){return e};r.d(t,"a",t);return t};r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)};r.p="";return r(r.s=3)})([function(e,t,r){"use strict";if(true){e.exports=r(1)}else{}},function(e,t,r){"use strict";
+/** @license React v16.5.2
+ * react.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */var n=r(2),o="function"===typeof Symbol&&Symbol.for,u=o?Symbol.for("react.element"):60103,i=o?Symbol.for("react.portal"):60106,c=o?Symbol.for("react.fragment"):60107,f=o?Symbol.for("react.strict_mode"):60108,a=o?Symbol.for("react.profiler"):60114,l=o?Symbol.for("react.provider"):60109,s=o?Symbol.for("react.context"):60110,p=o?Symbol.for("react.async_mode"):60111,y=o?Symbol.for("react.forward_ref"):60112;o&&Symbol.for("react.placeholder");var d="function"===typeof Symbol&&Symbol.iterator;function v(e,t,r,n,o,u,i,c){if(!e){e=void 0;if(void 0===t)e=Error("Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.");else{var f=[r,n,o,u,i,c],a=0;e=Error(t.replace(/%s/g,function(){return f[a++]}));e.name="Invariant Violation"}e.framesToPop=1;throw e}}function b(e){for(var t=arguments.length-1,r="https://reactjs.org/docs/error-decoder.html?invariant="+e,n=0;n<t;n++)r+="&args[]="+encodeURIComponent(arguments[n+1]);v(!1,"Minified React error #"+e+"; visit %s for the full message or use the non-minified dev environment for full errors and additional helpful warnings. ",r)}var h={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}},m={};function _(e,t,r){this.props=e;this.context=t;this.refs=m;this.updater=r||h}_.prototype.isReactComponent={};_.prototype.setState=function(e,t){"object"!==typeof e&&"function"!==typeof e&&null!=e?b("85"):void 0;this.updater.enqueueSetState(this,e,t,"setState")};_.prototype.forceUpdate=function(e){this.updater.enqueueForceUpdate(this,e,"forceUpdate")};function O(){}O.prototype=_.prototype;function g(e,t,r){this.props=e;this.context=t;this.refs=m;this.updater=r||h}var j=g.prototype=new O;j.constructor=g;n(j,_.prototype);j.isPureReactComponent=!0;var S={current:null,currentDispatcher:null},k=Object.prototype.hasOwnProperty,w={key:!0,ref:!0,__self:!0,__source:!0};function P(e,t,r){var n=void 0,o={},i=null,c=null;if(null!=t)for(n in void 0!==t.ref&&(c=t.ref),void 0!==t.key&&(i=""+t.key),t)k.call(t,n)&&!w.hasOwnProperty(n)&&(o[n]=t[n]);var f=arguments.length-2;if(1===f)o.children=r;else if(1<f){for(var a=Array(f),l=0;l<f;l++)a[l]=arguments[l+2];o.children=a}if(e&&e.defaultProps)for(n in f=e.defaultProps,f)void 0===o[n]&&(o[n]=f[n]);return{$$typeof:u,type:e,key:i,ref:c,props:o,_owner:S.current}}function x(e,t){return{$$typeof:u,type:e.type,key:t,ref:e.ref,props:e.props,_owner:e._owner}}function E(e){return"object"===typeof e&&null!==e&&e.$$typeof===u}function $(e){var t={"=":"=0",":":"=2"};return"$"+(""+e).replace(/[=:]/g,function(e){return t[e]})}var C=/\/+/g,R=[];function M(e,t,r,n){if(R.length){var o=R.pop();o.result=e;o.keyPrefix=t;o.func=r;o.context=n;o.count=0;return o}return{result:e,keyPrefix:t,func:r,context:n,count:0}}function A(e){e.result=null;e.keyPrefix=null;e.func=null;e.context=null;e.count=0;10>R.length&&R.push(e)}function U(e,t,r,n){var o=typeof e;if("undefined"===o||"boolean"===o)e=null;var c=!1;if(null===e)c=!0;else switch(o){case"string":case"number":c=!0;break;case"object":switch(e.$$typeof){case u:case i:c=!0}}if(c)return r(n,e,""===t?"."+T(e,0):t),1;c=0;t=""===t?".":t+":";if(Array.isArray(e))for(var f=0;f<e.length;f++){o=e[f];var a=t+T(o,f);c+=U(o,a,r,n)}else if(null===e||"object"!==typeof e?a=null:(a=d&&e[d]||e["@@iterator"],a="function"===typeof a?a:null),"function"===typeof a)for(e=a.call(e),f=0;!(o=e.next()).done;)o=o.value,a=t+T(o,f++),c+=U(o,a,r,n);else"object"===o&&(r=""+e,b("31","[object Object]"===r?"object with keys {"+Object.keys(e).join(", ")+"}":r,""));return c}function q(e,t,r){return null==e?0:U(e,"",t,r)}function T(e,t){return"object"===typeof e&&null!==e&&null!=e.key?$(e.key):t.toString(36)}function I(e,t){e.func.call(e.context,t,e.count++)}function F(e,t,r){var n=e.result,o=e.keyPrefix;e=e.func.call(e.context,t,e.count++);Array.isArray(e)?N(e,n,r,function(e){return e}):null!=e&&(E(e)&&(e=x(e,o+(!e.key||t&&t.key===e.key?"":(""+e.key).replace(C,"$&/")+"/")+r)),n.push(e))}function N(e,t,r,n,o){var u="";null!=r&&(u=(""+r).replace(C,"$&/")+"/");t=M(t,u,n,o);q(e,F,t);A(t)}function D(e,t){var r=S.currentDispatcher;null===r?b("277"):void 0;return r.readContext(e,t)}var V={Children:{map:function(e,t,r){if(null==e)return e;var n=[];N(e,n,null,t,r);return n},forEach:function(e,t,r){if(null==e)return e;t=M(null,null,t,r);q(e,I,t);A(t)},count:function(e){return q(e,function(){return null},null)},toArray:function(e){var t=[];N(e,t,null,function(e){return e});return t},only:function(e){E(e)?void 0:b("143");return e}},createRef:function(){return{current:null}},Component:_,PureComponent:g,createContext:function(e,t){void 0===t&&(t=null);e={$$typeof:s,_calculateChangedBits:t,_currentValue:e,_currentValue2:e,Provider:null,Consumer:null,unstable_read:null};e.Provider={$$typeof:l,_context:e};e.Consumer=e;e.unstable_read=D.bind(null,e);return e},forwardRef:function(e){return{$$typeof:y,render:e}},Fragment:c,StrictMode:f,unstable_AsyncMode:p,unstable_Profiler:a,createElement:P,cloneElement:function(e,t,r){null===e||void 0===e?b("267",e):void 0;var o=void 0,i=n({},e.props),c=e.key,f=e.ref,a=e._owner;if(null!=t){void 0!==t.ref&&(f=t.ref,a=S.current);void 0!==t.key&&(c=""+t.key);var l=void 0;e.type&&e.type.defaultProps&&(l=e.type.defaultProps);for(o in t)k.call(t,o)&&!w.hasOwnProperty(o)&&(i[o]=void 0===t[o]&&void 0!==l?l[o]:t[o])}o=arguments.length-2;if(1===o)i.children=r;else if(1<o){l=Array(o);for(var s=0;s<o;s++)l[s]=arguments[s+2];i.children=l}return{$$typeof:u,type:e.type,key:c,ref:f,props:i,_owner:a}},createFactory:function(e){var t=P.bind(null,e);t.type=e;return t},isValidElement:E,version:"16.5.2",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:S,assign:n}},W={default:V},L=W&&V||W;e.exports=L.default||L},function(e,t,r){"use strict";
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/var n=Object.getOwnPropertySymbols;var o=Object.prototype.hasOwnProperty;var u=Object.prototype.propertyIsEnumerable;function i(e){if(e===null||e===undefined){throw new TypeError("Object.assign cannot be called with null or undefined")}return Object(e)}function c(){try{if(!Object.assign){return false}var e=new String("abc");e[5]="de";if(Object.getOwnPropertyNames(e)[0]==="5"){return false}var t={};for(var r=0;r<10;r++){t["_"+String.fromCharCode(r)]=r}var n=Object.getOwnPropertyNames(t).map(function(e){return t[e]});if(n.join("")!=="0123456789"){return false}var o={};"abcdefghijklmnopqrst".split("").forEach(function(e){o[e]=e});if(Object.keys(Object.assign({},o)).join("")!=="abcdefghijklmnopqrst"){return false}return true}catch(e){return false}}e.exports=c()?Object.assign:function(e,t){var r;var c=i(e);var f;for(var a=1;a<arguments.length;a++){r=Object(arguments[a]);for(var l in r){if(o.call(r,l)){c[l]=r[l]}}if(n){f=n(r);for(var s=0;s<f.length;s++){if(u.call(r,f[s])){c[f[s]]=r[f[s]]}}}}return c}},function(e,t,r){"use strict";r.r(t);var n=r(0);var o=function(){return Math.random().toString(36).substring(7)};var u=function(e){var t=e.reduce(function(e,t){e[t]=true;return e},{});return Object.keys(t)};r.d(t,"update",function(){return a});r.d(t,"connect",function(){return l});var i=undefined&&undefined.__extends||function(){var e=function(t,r){e=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)if(t.hasOwnProperty(r))e[r]=t[r]};return e(t,r)};return function(t,r){e(t,r);function n(){this.constructor=t}t.prototype=r===null?Object.create(r):(n.prototype=r.prototype,new n)}}();var c=undefined&&undefined.__assign||function(){c=Object.assign||function(e){for(var t,r=1,n=arguments.length;r<n;r++){t=arguments[r];for(var o in t)if(Object.prototype.hasOwnProperty.call(t,o))e[o]=t[o]}return e};return c.apply(this,arguments)};var f;var a=(f=function(){var e={};var t={};var r=function(t,r,n){if(!e[t]){e[t]={}}e[t][r]=n};var f=function(t){Object.keys(e).forEach(function(r){return delete e[r][t]})};var l=function(t,r){Object.keys(e[t]).forEach(function(n){var o=e[t][n];if(!o){return}o(r)})};return{update:function(r,n){if(!e[r]){return}var o=n(t[r]);t[r]=o;l(r,o)},connect:function(e,l){return function(s){i(p,s);function p(e){var n=s.call(this,e)||this;n.name=o();var i=Object.keys(e);u(i.concat(l||[])).forEach(function(o){r(o,n.name,function(e){var t;if(!o){return}var r=(t={},t[o]=e,t);n.setState(function(e){return c({},e,r)})});if(i.indexOf(o)>-1){var u=e[o];t[o]=u}});return n}p.prototype.render=function(){return n["createElement"](e,c({},this.state))};p.prototype.componentWillMount=function(){var e=Object.keys(this.props);var t=l||[];u(e.concat(t)).forEach(function(e){a(e,function(e){return e})})};p.prototype.componentWillReceiveProps=function(e){this.setState(e)};p.prototype.componentWillUnmount=function(){f(this.name)};return p}(n["Component"])}}}(),f.update),l=f.connect}]);

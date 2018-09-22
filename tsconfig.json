@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "outFile": "./dist/ReactImperator.js",
     "rootDir": "src",
     "noImplicitAny": true,
-    "module": "amd",
+    "module": "es2015",
     "target": "es5",
     "jsx": "react",
     "moduleResolution": "node",

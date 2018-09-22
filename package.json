@@ -1,9 +1,13 @@
 {
   "name": "react-imperator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "State handler for React",
   "main": "dist/ReactImperator.js",
-  "types": ["dist/ReactImperator.d.ts", "dist/ReactImperator.d.ts", "dist/ReactImperator.js"],
+  "types": [
+    "dist/ReactImperator.d.ts",
+    "dist/ReactImperator.d.ts",
+    "dist/ReactImperator.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/johnstrand/react-imperator"
@@ -16,7 +20,10 @@
   "license": "MIT",
   "devDependencies": {
     "@types/react": "^16.4.14",
+    "awesome-typescript-loader": "^5.2.1",
     "react": "^16.5.0",
-    "typescript": "^3.0.3"
+    "typescript": "^3.0.3",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.0"
   }
 }
