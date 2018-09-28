@@ -1,6 +1,6 @@
 {
   "name": "react-imperator",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "State handler for React",
   "main": "dist/ReactImperator.js",
   "types": [
