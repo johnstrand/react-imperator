@@ -1,2 +1,3 @@
 # react-imperator
-Whelp, I guess it isn't broken anymore
+
+Ok, it works, documentation will come... maybe
