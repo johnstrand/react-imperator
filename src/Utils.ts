@@ -1,4 +1,4 @@
-import { Action, UniqueIndexer, Func } from "./Types";
+import { Action, UniqueIndexer, Func, Func2 } from "./Types";
 
 export const generateName: Action<string> = (): string =>
     Math.random()
@@ -13,4 +13,14 @@ export const distinct : Func<string[], string[]> = (arr: string[]) => {
         }, {});
 
     return Object.keys(lookup);
+};
+
+export const exclude : Func2<string[], string[], string[]> = (sourceArray: string[], excludeArray: string[]) => {
+    const excludeLookup: UniqueIndexer =
+        excludeArray.reduce((acc: UniqueIndexer, cur: string) => {
+            acc[cur] = true;
+            return acc;
+        }, {});
+    
+    return sourceArray.filter(item => !excludeLookup[item]);
 };
