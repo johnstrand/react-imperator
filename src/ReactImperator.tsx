@@ -85,7 +85,7 @@ export const { update, connect } = (() => {
 
                 componentWillMount(): void {
                     const propContexts: string[] = Object.keys(this.props);
-                    let extraContext: string[] = contexts || [];
+                    const extraContext: string[] = contexts || [];
 
                     distinct(propContexts.concat(extraContext)).forEach(context => {
                         update<any>(context, value => value);
