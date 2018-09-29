@@ -55,13 +55,20 @@ export const { update, connect } = (() => {
             contexts?: string[],
             excludedContexts?: string[]
         ): React.ComponentType<S> {
+
+            const forEachProp = (props: S, callback: (prop: string) => void) => {
+                const propContexts: string[] = Object.keys(props);
+                const suppliedContexts: string[] = contexts || [];
+                exclude(distinct(propContexts.concat(suppliedContexts)), (excludedContexts || [])).forEach(callback);
+            }
+
             return class extends React.Component<S, S> {
                 private name: string;
                 constructor(props: S) {
                     super(props);
                     this.name = generateName();
-                    const propContexts: string[] = Object.keys(props);
-                    exclude(distinct(propContexts.concat(contexts || [])), (excludedContexts || [])).forEach(context => {
+
+                    forEachProp(props, context => {
                         registerCallback(context, this.name, value => {
                             if (!context) {
                                 return;
@@ -72,7 +79,7 @@ export const { update, connect } = (() => {
 
                         // If the current context comes from a component prop AND
                         // the context doesn't already have a value, take the property value
-                        if (propContexts.indexOf(context) > -1 && !contextState[context]) {
+                        if ((props as IndexedObject)[context] && !contextState[context]) {
                             const value: IndexedObject = (props as IndexedObject)[context];
                             contextState[context] = value;
                         }
@@ -84,10 +91,7 @@ export const { update, connect } = (() => {
                 }
 
                 componentWillMount(): void {
-                    const propContexts: string[] = Object.keys(this.props);
-                    const extraContext: string[] = contexts || [];
-
-                    distinct(propContexts.concat(extraContext)).forEach(context => {
+                    forEachProp(this.props, context => {
                         update<any>(context, value => value);
                     });
                 }
