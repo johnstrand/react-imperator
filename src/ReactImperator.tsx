@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { ContextCallback, CallbackRegistration, Callback, Func, IndexedObject, VoidAction2 } from "./Types";
-import { generateName, distinct } from "./Utils";
+import { generateName, distinct, exclude } from "./Utils";
 
 export const { update, connect } = (() => {
     // Tracks all of the context callbacks, with the structure
@@ -52,7 +52,8 @@ export const { update, connect } = (() => {
         },
         connect: function <S>(
             Component: React.ComponentType<S>,
-            contexts?: string[]
+            contexts?: string[],
+            excludedContexts?: string[]
         ): React.ComponentType<S> {
             return class extends React.Component<S, S> {
                 private name: string;
@@ -60,7 +61,7 @@ export const { update, connect } = (() => {
                     super(props);
                     this.name = generateName();
                     const propContexts: string[] = Object.keys(props);
-                    distinct(propContexts.concat(contexts || [])).forEach(context => {
+                    exclude(distinct(propContexts.concat(contexts || [])), (excludedContexts || [])).forEach(context => {
                         registerCallback(context, this.name, value => {
                             if (!context) {
                                 return;
