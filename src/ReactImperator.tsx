@@ -3,7 +3,12 @@ import * as React from "react";
 import { ContextCallback, CallbackRegistration, Callback, Func, IndexedObject, VoidAction2 } from "./Types";
 import { generateName, distinct, exclude } from "./Utils";
 
-export const { update, connect } = (() => {
+type Imperator = {
+    update: <T>(context: string, producer: (state: T) => T) => void,
+    connect: <S>(Component: React.ComponentType<S>, contexts?: string[], excludedContexts?: string[]) => React.ComponentType<S>
+}
+
+export const { update, connect }: Imperator = (() => {
     // Tracks all of the context callbacks, with the structure
     // callbacks.context.consumer = callback
     const callbacks: ContextCallback = {};
