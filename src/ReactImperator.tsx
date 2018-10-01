@@ -90,7 +90,7 @@ export module ReactImperator {
                             }
                         });
 
-                        this.setState(contextState as S);
+                        this.state = contextState as S;
                     }
 
                     render(): JSX.Element {
