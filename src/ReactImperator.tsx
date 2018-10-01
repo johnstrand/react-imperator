@@ -89,6 +89,8 @@ export module ReactImperator {
                                 contextState[context] = value;
                             }
                         });
+
+                        this.setState(contextState as S);
                     }
 
                     render(): JSX.Element {
