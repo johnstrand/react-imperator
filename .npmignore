@@ -16,6 +16,7 @@
 /example
 
 # misc
+webpack.config.js
 .DS_Store
 .env
 npm-debug.log*
