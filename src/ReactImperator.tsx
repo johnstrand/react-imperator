@@ -7,7 +7,8 @@ type Imperator = {
     update: <T>(context: string, producer: (state: T) => T) => void,
     connect: <S>(Component: React.ComponentType<S>, contexts?: string[], excludedContexts?: string[]) => React.ComponentType<S>
 }
- const reactImperator: Imperator = (() => {
+
+const reactImperator: Imperator = (() => {
     // Tracks all of the context callbacks, with the structure
     // callbacks.context.consumer = callback
     const callbacks: ContextCallback = {};
@@ -25,6 +26,7 @@ type Imperator = {
         if (!callbacks[context]) {
             callbacks[context] = {};
         }
+
         // Assign the callback to the context/consumer combo
         callbacks[context][consumer] = callback;
     };
@@ -35,6 +37,10 @@ type Imperator = {
     };
 
     const updateContext: VoidAction2<string, any> = (context: string, state: any) => {
+        // No callbacks registered for this context, just do nothing
+        if(!callbacks[context]) {
+            return;
+        }
         Object.keys(callbacks[context]).forEach(subscriber => {
             const callback: Callback = callbacks[context][subscriber];
             if (!callback) {
@@ -46,10 +52,6 @@ type Imperator = {
 
     return {
         update: function <T>(context: string, producer: (state: T) => T): void {
-            if (!callbacks[context]) {
-                return;
-            }
-
             const state: any = producer(contextState[context]);
             contextState[context] = state;
             updateContext(context, state);
@@ -71,7 +73,7 @@ type Imperator = {
                 constructor(props: S) {
                     super(props);
                     this.name = generateName();
-
+                    
                     forEachProp(props, context => {
                         registerCallback(context, this.name, value => {
                             if (!context) {
@@ -84,7 +86,7 @@ type Imperator = {
                         // If the current context comes from a component prop AND
                         // the context doesn't already have a value, take the property value
                         if ((props as IndexedObject)[context] && !contextState[context]) {
-                            const value: IndexedObject = (props as IndexedObject)[context];
+                            const value: any = (props as IndexedObject)[context];
                             contextState[context] = value;
                         }
                     });
