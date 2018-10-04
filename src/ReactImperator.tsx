@@ -14,7 +14,7 @@ const reactImperator: Imperator = (() => {
     const callbacks: ContextCallback = {};
 
     // Tracks the last value specified for each context
-    const contextState: { [key: string]: any } = {};
+    const contextState: { [key: string]: any } & Object = {};
 
     // Registers a callback for a specific combination of context and consumer
     const registerCallback: CallbackRegistration = (
@@ -72,8 +72,16 @@ const reactImperator: Imperator = (() => {
                 private name: string;
                 constructor(props: S) {
                     super(props);
+                    if(!props) {
+                        return;
+                    }
                     this.name = generateName();
-                    
+
+                    const initialState: IndexedObject = {};
+
+                    // Copy all existing props into the initial state
+                    Object.keys(props).forEach(prop => initialState[prop] = (props as IndexedObject)[prop]);
+
                     forEachProp(props, context => {
                         registerCallback(context, this.name, value => {
                             if (!context) {
@@ -83,15 +91,20 @@ const reactImperator: Imperator = (() => {
                             this.setState((state: S) => ({ ...(state as {}), ...newState }));
                         });
 
+                        // If the property exists in the global state, replace the value of the initial state
+                        if(contextState.hasOwnProperty(context)) {
+                            initialState[context] = contextState[context];
+                        }
+
                         // If the current context comes from a component prop AND
                         // the context doesn't already have a value, take the property value
-                        if ((props as IndexedObject)[context] && !contextState[context]) {
+                        if ((props as IndexedObject)[context] && !contextState.hasOwnProperty(context)) {
                             const value: any = (props as IndexedObject)[context];
                             contextState[context] = value;
                         }
                     });
 
-                    this.state = contextState as S;
+                    this.state = initialState as S;
                 }
 
                 render(): JSX.Element {
