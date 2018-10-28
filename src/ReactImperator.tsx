@@ -73,7 +73,7 @@ const reactImperator: Imperator = (() => {
                 constructor(props: S) {
                     super(props);
                     if(!props) {
-                        return;
+                        props = {} as S;
                     }
                     this.name = generateName();
 
