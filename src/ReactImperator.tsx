@@ -1,11 +1,22 @@
 import * as React from "react";
 
-import { ContextCallback, CallbackRegistration, Callback, Func, IndexedObject, VoidAction2 } from "./Types";
-import { generateName, distinct, exclude } from "./Utils";
+import {
+    Callback,
+    CallbackRegistration,
+    ContextCallback,
+    Func,
+    IndexedObject,
+    VoidAction2,
+} from "./Types";
+import { distinct, exclude, generateName } from "./Utils";
 
-type Imperator = {
-    update: <T>(context: string, producer: (state: T) => T) => void,
-    connect: <S>(Component: React.ComponentType<S>, contexts?: string[], excludedContexts?: string[]) => React.ComponentType<S>
+interface Imperator {
+    update: <T>(context: string, producer: (state: T) => T) => void;
+    connect: <S>(
+        Component: React.ComponentType<S>,
+        contexts?: string[],
+        excludedContexts?: string[]
+    ) => React.ComponentType<S>;
 }
 
 const reactImperator: Imperator = (() => {
@@ -14,7 +25,7 @@ const reactImperator: Imperator = (() => {
     const callbacks: ContextCallback = {};
 
     // Tracks the last value specified for each context
-    const contextState: { [key: string]: any } & Object = {};
+    const contextState: { [key: string]: any } & object = {};
 
     // Registers a callback for a specific combination of context and consumer
     const registerCallback: CallbackRegistration = (
@@ -33,15 +44,20 @@ const reactImperator: Imperator = (() => {
 
     const unregister: Func<string, void> = (consumer: string) => {
         // Remove the specified consumer entry for each context
-        Object.keys(callbacks).forEach(context => delete callbacks[context][consumer]);
+        Object.keys(callbacks).forEach(
+            (context) => delete callbacks[context][consumer]
+        );
     };
 
-    const updateContext: VoidAction2<string, any> = (context: string, state: any) => {
+    const updateContext: VoidAction2<string, any> = (
+        context: string,
+        state: any
+    ) => {
         // No callbacks registered for this context, just do nothing
-        if(!callbacks[context]) {
+        if (!callbacks[context]) {
             return;
         }
-        Object.keys(callbacks[context]).forEach(subscriber => {
+        Object.keys(callbacks[context]).forEach((subscriber) => {
             const callback: Callback = callbacks[context][subscriber];
             if (!callback) {
                 return;
@@ -51,28 +67,33 @@ const reactImperator: Imperator = (() => {
     };
 
     return {
-        update: function <T>(context: string, producer: (state: T) => T): void {
+        update: function<T>(context: string, producer: (state: T) => T): void {
             const state: any = producer(contextState[context]);
             contextState[context] = state;
             updateContext(context, state);
         },
-        connect: function <S>(
+        connect: function<S>(
             Component: React.ComponentType<S>,
             contexts?: string[],
             excludedContexts?: string[]
         ): React.ComponentType<S> {
-
-            const forEachProp = (props: S, callback: (prop: string) => void) => {
+            const forEachProp = (
+                props: S,
+                callback: (prop: string) => void
+            ) => {
                 const propContexts: string[] = Object.keys(props);
                 const suppliedContexts: string[] = contexts || [];
-                exclude(distinct(propContexts.concat(suppliedContexts)), (excludedContexts || [])).forEach(callback);
-            }
+                exclude(
+                    distinct(propContexts.concat(suppliedContexts)),
+                    excludedContexts || []
+                ).forEach(callback);
+            };
 
             return class extends React.Component<S, S> {
                 private name: string;
                 constructor(props: S) {
                     super(props);
-                    if(!props) {
+                    if (!props) {
                         props = {} as S;
                     }
                     this.name = generateName();
@@ -80,26 +101,41 @@ const reactImperator: Imperator = (() => {
                     const initialState: IndexedObject = {};
 
                     // Copy all existing props into the initial state
-                    Object.keys(props).forEach(prop => initialState[prop] = (props as IndexedObject)[prop]);
+                    Object.keys(props).forEach(
+                        (prop) =>
+                            (initialState[prop] = (props as IndexedObject)[
+                                prop
+                            ])
+                    );
 
-                    forEachProp(props, context => {
-                        registerCallback(context, this.name, value => {
+                    forEachProp(props, (context) => {
+                        registerCallback(context, this.name, (value) => {
                             if (!context) {
                                 return;
                             }
-                            const newState: IndexedObject = { [context]: value };
-                            this.setState((state: S) => ({ ...(state as {}), ...newState }));
+                            const newState: IndexedObject = {
+                                [context]: value,
+                            };
+                            this.setState((state: S) => ({
+                                ...(state as {}),
+                                ...newState,
+                            }));
                         });
 
                         // If the property exists in the global state, replace the value of the initial state
-                        if(contextState.hasOwnProperty(context)) {
+                        if (contextState.hasOwnProperty(context)) {
                             initialState[context] = contextState[context];
                         }
 
                         // If the current context comes from a component prop AND
                         // the context doesn't already have a value, take the property value
-                        if ((props as IndexedObject)[context] && !contextState.hasOwnProperty(context)) {
-                            const value: any = (props as IndexedObject)[context];
+                        if (
+                            (props as IndexedObject)[context] &&
+                            !contextState.hasOwnProperty(context)
+                        ) {
+                            const value: any = (props as IndexedObject)[
+                                context
+                            ];
                             contextState[context] = value;
                         }
                     });
@@ -107,19 +143,19 @@ const reactImperator: Imperator = (() => {
                     this.state = initialState as S;
                 }
 
-                render(): JSX.Element {
+                public render(): JSX.Element {
                     return <Component {...this.state} />;
                 }
 
-                componentWillReceiveProps(props: S): void {
+                public componentWillReceiveProps(props: S): void {
                     this.setState(props);
                 }
 
-                componentWillUnmount(): void {
+                public componentWillUnmount(): void {
                     unregister(this.name);
                 }
             };
-        }
+        },
     };
 })();
 

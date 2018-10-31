@@ -5,9 +5,9 @@ export type Func<TArg, TReturn> = (arg: TArg) => TReturn;
 export type Func2<TArg1, TArg2, TReturn> = (arg1: TArg1, arg2: TArg2) => TReturn;
 
 export type Callback = VoidAction<any>;
-export type SubscriberCallback = { [key: string]: Callback };
-export type ContextCallback = { [key: string]: SubscriberCallback };
+export interface SubscriberCallback { [key: string]: Callback; }
+export interface ContextCallback { [key: string]: SubscriberCallback; }
 export type CallbackRegistration = (context: string, consumer: string, callback: Callback) => void;
 
-export type UniqueIndexer = { [key: string]: boolean };
-export type IndexedObject = { [key: string]: any };
+export interface UniqueIndexer { [key: string]: boolean; }
+export interface IndexedObject { [key: string]: any; }
