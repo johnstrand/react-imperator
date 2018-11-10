@@ -8,6 +8,7 @@ import {
     IndexedObject,
     VoidAction2,
 } from "./Types";
+
 import { distinct, exclude, generateName } from "./Utils";
 
 interface Imperator {
@@ -67,12 +68,12 @@ const reactImperator: Imperator = (() => {
     };
 
     return {
-        update: function<T>(context: string, producer: (state: T) => T): void {
+        update<T>(context: string, producer: (state: T) => T): void {
             const state: any = producer(contextState[context]);
             contextState[context] = state;
             updateContext(context, state);
         },
-        connect: function<S>(
+        connect<S>(
             Component: React.ComponentType<S>,
             contexts?: string[],
             excludedContexts?: string[]
