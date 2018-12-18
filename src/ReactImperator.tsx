@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
     Callback,
@@ -7,9 +7,9 @@ import {
     Func,
     IndexedObject,
     VoidAction2,
-} from "./Types";
+} from './Types';
 
-import { distinct, exclude, generateName } from "./Utils";
+import { distinct, exclude, generateName } from './Utils';
 
 interface Imperator {
     update: <T>(context: string, producer: (state: T) => T) => void;
@@ -68,6 +68,17 @@ const reactImperator: Imperator = (() => {
     };
 
     return {
+        subscribe: function<T>(
+            context: string,
+            callback: (state: T) => void
+        ): string {
+            const name = generateName();
+            registerCallback(context, name, callback);
+            return name;
+        },
+        unsubscribe: function(name: string) {
+            unregister(name);
+        },
         update<T>(context: string, producer: (state: T) => T): void {
             const state: any = producer(contextState[context]);
             contextState[context] = state;
