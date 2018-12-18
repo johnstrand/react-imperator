@@ -7,7 +7,7 @@ The package exposes two methods, connect and update.
 ## Connect
 
 ```typescript
-connect: <S>(Component: React.ComponentType<S>, contexts?: string[], excludedContexts?: string[]) => React.ComponentType<S>
+connect: <S>(Component: React.ComponentType<S>, contexts?: string[], excludedContexts?: string[]) => React.ComponentType<S>;
 ```
 
 connect() takes three arguments:
@@ -20,7 +20,7 @@ and returns a wrapped component
 
 ## Update
 ```typescript
-update: <T>(context: string, producer: (state: T) => T) => void
+update: <T>(context: string, producer: (state: T) => T) => void;
 ```
 
 update() takes two arguments:
@@ -47,3 +47,19 @@ const click = () => {
 
 export const Incrementer = () => <button onClick={click}>Click me</button>;
 ```
+
+## New in 1.0.11
+Imperator now exposes two additional methods:
+```typescript
+subscribe: function<T>(context: string, callback: (state: T) => void): string;
+unsubscribe: function(name: string): void;
+```
+
+These are helper methods to allow service classes and similar to monitor context changes.
+subscribe() takes two arguments:
+* A context to monitor
+* A callback to invoke when context changes
+And returns a random identifier for a subscription
+
+unsubscribe() takes a single argument:
+* The subscription name to revoke (output from subscribe method)
