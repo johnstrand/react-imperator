@@ -18,6 +18,8 @@ interface Imperator {
         contexts?: string[],
         excludedContexts?: string[]
     ) => React.ComponentType<S>;
+    subscribe: <T>(context: string, callback: (state: T) => void) => string;
+    unsubscribe: (name: string) => void;
 }
 
 const reactImperator: Imperator = (() => {
@@ -68,7 +70,7 @@ const reactImperator: Imperator = (() => {
     };
 
     return {
-        subscribe: function<T>(
+        subscribe<T>(
             context: string,
             callback: (state: T) => void
         ): string {
@@ -76,7 +78,7 @@ const reactImperator: Imperator = (() => {
             registerCallback(context, name, callback);
             return name;
         },
-        unsubscribe: function(name: string) {
+        unsubscribe(name: string): void {
             unregister(name);
         },
         update<T>(context: string, producer: (state: T) => T): void {
@@ -171,4 +173,4 @@ const reactImperator: Imperator = (() => {
     };
 })();
 
-export const { connect, update } = reactImperator;
+export const { connect, update, subscribe, unsubscribe } = reactImperator;
