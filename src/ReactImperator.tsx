@@ -20,6 +20,7 @@ interface Imperator {
     ) => React.ComponentType<S>;
     subscribe: <T>(context: string, callback: (state: T) => void) => string;
     unsubscribe: (name: string) => void;
+    get: <T>(context: string) => T;
 }
 
 const reactImperator: Imperator = (() => {
@@ -80,6 +81,9 @@ const reactImperator: Imperator = (() => {
         },
         unsubscribe(name: string): void {
             unregister(name);
+        },
+        get<T>(context: string): T {
+            return contextState[context];
         },
         update<T>(context: string, producer: (state: T) => T): void {
             const state: any = producer(contextState[context]);
@@ -173,4 +177,4 @@ const reactImperator: Imperator = (() => {
     };
 })();
 
-export const { connect, update, subscribe, unsubscribe } = reactImperator;
+export const { connect, update, subscribe, unsubscribe, get } = reactImperator;
