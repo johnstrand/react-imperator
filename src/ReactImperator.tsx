@@ -12,6 +12,8 @@ import {
 import { distinct, exclude, generateName } from './Utils';
 
 interface Imperator {
+    persist: () => void;
+    restore: () => void;
     update: <T>(context: string, producer: (state: T) => T) => void;
     connect: <S>(
         Component: React.ComponentType<S>,
@@ -71,6 +73,18 @@ const reactImperator: Imperator = (() => {
     };
 
     return {
+        persist(): void {
+            localStorage.setItem("__persisted_state", JSON.stringify(contextState));
+        },
+        restore(): void {
+            const state = JSON.parse(localStorage.getItem("__persisted_state"));
+            if(!state) {
+                return;
+            }
+            Object.keys(state).forEach(context => {
+                updateContext(context, state[context]);
+            });
+        },
         subscribe<T>(
             context: string,
             callback: (state: T) => void
@@ -177,4 +191,4 @@ const reactImperator: Imperator = (() => {
     };
 })();
 
-export const { connect, update, subscribe, unsubscribe, get } = reactImperator;
+export const { connect, update, subscribe, unsubscribe, get, persist, restore } = reactImperator;
