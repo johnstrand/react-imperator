@@ -12,8 +12,10 @@ import {
 import { distinct, exclude, generateName } from './Utils';
 
 interface Imperator {
-    persist: () => void;
-    restore: () => void;
+    persist(): void;
+    persist(context: string): void;
+    restore(): void;
+    restore(context: string): void;
     update: <T>(context: string, producer: (state: T) => T) => void;
     connect: <S>(
         Component: React.ComponentType<S>,
@@ -73,22 +75,41 @@ const reactImperator: Imperator = (() => {
     };
 
     return {
-        persist(): void {
-            localStorage.setItem("__persisted_state", JSON.stringify(contextState));
-        },
-        restore(): void {
-            const state = JSON.parse(localStorage.getItem("__persisted_state"));
-            if(!state) {
+        persist(context?: string): void {
+            if (!context) {
+                localStorage.setItem(
+                    '__persisted_state',
+                    JSON.stringify(contextState)
+                );
                 return;
             }
-            Object.keys(state).forEach(context => {
+
+            if (!contextState.hasOwnProperty(context)) {
+                return;
+            }
+
+            localStorage.setItem(
+                context,
+                JSON.stringify(contextState[context])
+            );
+        },
+        restore(context?: string): void {
+            if (!!context) {
+                const contextValue = JSON.parse(
+                    localStorage.getItem('context')
+                );
+                updateContext(context, contextValue);
+                return;
+            }
+            const state = JSON.parse(localStorage.getItem('__persisted_state'));
+            if (!state) {
+                return;
+            }
+            Object.keys(state).forEach((context) => {
                 updateContext(context, state[context]);
             });
         },
-        subscribe<T>(
-            context: string,
-            callback: (state: T) => void
-        ): string {
+        subscribe<T>(context: string, callback: (state: T) => void): string {
             const name = generateName();
             registerCallback(context, name, callback);
             return name;
@@ -191,4 +212,12 @@ const reactImperator: Imperator = (() => {
     };
 })();
 
-export const { connect, update, subscribe, unsubscribe, get, persist, restore } = reactImperator;
+export const {
+    connect,
+    update,
+    subscribe,
+    unsubscribe,
+    get,
+    persist,
+    restore,
+} = reactImperator;
