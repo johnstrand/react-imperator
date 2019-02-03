@@ -1,6 +1,6 @@
 {
   "name": "react-imperator",
-  "version": "1.0.14",
+  "version": "2.0.0",
   "description": "State handler for React",
   "main": "dist/ReactImperator.js",
   "types": "dist/ReactImperator.d.ts",
@@ -15,11 +15,12 @@
   "author": "John Strand",
   "license": "MIT",
   "devDependencies": {
-    "@types/react": "^16.4.14",
+    "@types/react": "^16.8.1",
     "awesome-typescript-loader": "^5.2.1",
-    "react": "^16.5.0",
-    "typescript": "^3.0.3",
-    "webpack": "^4.19.1",
-    "webpack-cli": "^3.1.0"
+    "react": "^16.7.0",
+    "typescript": "^3.3.1",
+    "uglifyjs-webpack-plugin": "^2.1.1",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1"
   }
 }

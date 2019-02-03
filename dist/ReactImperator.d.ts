@@ -1,8 +1,8 @@
-import * as React from 'react';
-export declare const connect: <S>(Component: React.ComponentType<S>, contexts?: string[], excludedContexts?: string[]) => React.ComponentType<S>, update: <T>(context: string, producer: (state: T) => T) => void, subscribe: <T>(context: string, callback: (state: T) => void) => string, unsubscribe: (name: string) => void, get: <T>(context: string) => T, persist: {
-    (): void;
-    (context: string): void;
-}, restore: {
-    (): void;
-    (context: string): void;
+import * as React from "react";
+export declare function createStore<StoreState>(initialState: StoreState): {
+    subscribe<T extends keyof StoreState>(context: T, callback: (value: StoreState[T]) => void): string;
+    unsubscribe(name: string): void;
+    get<T extends keyof StoreState>(context: T): StoreState[T];
+    update<T extends keyof StoreState>(context: T, reducer: (state: StoreState[T]) => StoreState[T]): void;
+    connect<LocalState>(Component: React.ComponentType<LocalState>, mapStoreToLocal: (state: StoreState) => LocalState): React.ComponentType<LocalState>;
 };
