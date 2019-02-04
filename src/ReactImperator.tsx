@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 const generateName: () => string = (): string =>
     Math.random()
@@ -6,7 +6,9 @@ const generateName: () => string = (): string =>
         .substring(7);
 
 export function createStore<StoreState>(initialState: StoreState) {
-    interface IDictionary<T> { [key: string]: T; }
+    interface IDictionary<T> {
+        [key: string]: T;
+    }
     type Notifier = () => void;
     type StoreProp = keyof StoreState;
     type Callback<T extends StoreProp> = (value: StoreState[T]) => void;
@@ -61,21 +63,26 @@ export function createStore<StoreState>(initialState: StoreState) {
         },
         connect<LocalState>(
             Component: React.ComponentType<LocalState>,
-            mapStoreToLocal: (state: StoreState) => LocalState
+            mapStoreToLocal: (state: StoreState) => Partial<LocalState>
         ): React.ComponentType<LocalState> {
             return class extends React.Component<LocalState, LocalState> {
                 private name: string;
                 constructor(props: LocalState) {
                     super(props);
                     this.name = generateName();
-                    this.state = mapStoreToLocal({ ...props, ...store });
+                    this.state = mapStoreToLocal({
+                        ...props,
+                        ...store,
+                    }) as Readonly<LocalState>;
 
                     storeCallbacks[this.name] = () =>
-                        this.setState(mapStoreToLocal(store));
+                        this.setState(mapStoreToLocal(store) as Readonly<
+                            LocalState
+                        >);
                 }
 
                 public render(): JSX.Element {
-                    return <Component {...{...this.props, ...this.state}} />;
+                    return <Component {...{ ...this.props, ...this.state }} />;
                 }
 
                 public componentWillUnmount(): void {
