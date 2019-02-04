@@ -12,7 +12,7 @@
         "url": "https://github.com/johnstrand/react-imperator"
     },
     "scripts": {
-        "prepublish": "node node_modules/webpack/bin/webpack.js"
+        "prepublishOnly": "node node_modules/webpack/bin/webpack.js"
     },
     "keywords": [],
     "author": "John Strand",
