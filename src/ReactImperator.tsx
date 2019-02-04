@@ -75,7 +75,7 @@ export function createStore<StoreState>(initialState: StoreState) {
                 }
 
                 public render(): JSX.Element {
-                    return <Component {...this.state} />;
+                    return <Component {...{...this.props, ...this.state}} />;
                 }
 
                 public componentWillUnmount(): void {
