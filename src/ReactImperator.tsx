@@ -86,11 +86,7 @@ export function createStore<StoreState>(initialState: StoreState) {
                 }
 
                 public componentWillUnmount(): void {
-                    Object.getOwnPropertyNames(storeCallbacks).forEach(
-                        (context) => {
-                            delete storeCallbacks[context][name];
-                        }
-                    );
+                    delete storeCallbacks[this.name];
                 }
             };
         },
